@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: service-b
+server:
+  port: 3334
+eureka:
+  instance:
+    prefer-ip-address: false
+    lease-renewal-interval-in-seconds: 1
+    lease-expiration-duration-in-seconds: 3
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+#feign:
+#  hystrix:
+#    enabled: true
+
+
+
+
+

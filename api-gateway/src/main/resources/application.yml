@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: api-gateway
+  profiles:
+    active: test
+server:
+  port: 4444
+eureka:
+  instance:
+    prefer-ip-address: false
+    lease-renewal-interval-in-seconds: 1
+    lease-expiration-duration-in-seconds: 3
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+logging:
+  level:
+    # feign日志打印级别，需要配置feign的configuration。否则打印默认为NONE
+    com.gmou.api.client.ServiceAClient: DEBUG
+
