@@ -20,7 +20,7 @@ import com.google.protobuf.ByteString;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.hyperledger.fabric.sdk.Channel;
 import org.hyperledger.fabric.sdk.HFClient;
-import org.hyperledger.fabric.sdk.TestHFClient;
+//import org.hyperledger.fabric.sdk.TestHFClient;
 import org.hyperledger.fabric.sdk.User;
 import org.hyperledger.fabric.sdk.security.CryptoSuite;
 import org.hyperledger.fabric.sdk.transaction.TransactionContext;
@@ -36,18 +36,18 @@ public class TransactionContextTest {
     static HFClient hfclient = null;
 
 
-    @BeforeClass
-    public static void setupClient() {
-
-        try {
-            hfclient = TestHFClient.newInstance();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Unexpected Exception " + e.getMessage());
-
-        }
-    }
+//    @BeforeClass
+//    public static void setupClient() {
+//
+//        try {
+//            hfclient = TestHFClient.newInstance();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Unexpected Exception " + e.getMessage());
+//
+//        }
+//    }
 
     @Test
     public void testGetters() throws Exception {
@@ -81,15 +81,15 @@ public class TransactionContextTest {
 
     }
 
-    @Test
-    public void testMyStrructure() throws Exception {
-
-        byte[] idBytes = new byte[]{1, 2, 3, 4, 5};
-        TransactionContext.MyStructure my = new TransactionContext.MyStructure("test", idBytes);
-        ASN1Primitive prim = my.toASN1Primitive();
-        Assert.assertNotNull(prim);
-
-    }
+//    @Test
+//    public void testMyStrructure() throws Exception {
+//
+//        byte[] idBytes = new byte[]{1, 2, 3, 4, 5};
+//        TransactionContext.MyStructure my = new TransactionContext.MyStructure("test", idBytes);
+//        ASN1Primitive prim = my.toASN1Primitive();
+//        Assert.assertNotNull(prim);
+//
+//    }
 
 
     // ==========================================================================================

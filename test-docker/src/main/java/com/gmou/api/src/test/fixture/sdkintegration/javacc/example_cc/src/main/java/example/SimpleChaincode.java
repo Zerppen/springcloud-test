@@ -28,6 +28,8 @@ import javax.json.JsonObjectBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+//import org.hyperledger.fabric.protos.peer.FabricProposalResponse;
+import org.hyperledger.fabric.protos.peer.FabricProposalResponse;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
@@ -38,7 +40,7 @@ public class SimpleChaincode extends ChaincodeBase {
 	private static Log log = LogFactory.getLog(SimpleChaincode.class);
 
 	@Override
-	public Response init(ChaincodeStub stub) {
+	public FabricProposalResponse.Response init(ChaincodeStub stub) {
 		try {
 			final List<String> args = stub.getStringArgs();
 			switch (args.get(0)) {
@@ -57,7 +59,7 @@ public class SimpleChaincode extends ChaincodeBase {
 	}
 
 	@Override
-	public Response invoke(ChaincodeStub stub) {
+	public FabricProposalResponse.Response invoke(ChaincodeStub stub) {
 
 		try {
 			final List<String> argList = stub.getStringArgs();

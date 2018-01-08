@@ -69,7 +69,7 @@ public class End2endAndBackAgainIT {
     private static final TestConfig testConfig = TestConfig.getConfig();
     private static final String TEST_ADMIN_NAME = "admin";
     private static final String TESTUSER_1_NAME = "user1";
-    private static final String TEST_FIXTURES_PATH = "src/test/fixture";
+    private static final String TEST_FIXTURES_PATH = "test-docker/src/main/java/com/gmou/api/src/test/fixture";
 
     private static final String CHAIN_CODE_NAME = "example_cc_go";
     private static final String CHAIN_CODE_PATH = "github.com/example_cc";
