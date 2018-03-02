@@ -101,6 +101,7 @@ public class UpdateChannelIT {
 
             client.setCryptoSuite(CryptoSuite.Factory.getCryptoSuite());
 
+
             ////////////////////////////
             //Set up USERS
 
@@ -129,6 +130,7 @@ public class UpdateChannelIT {
 
             // Getting foo channels current configuration bytes.
             final byte[] channelConfigurationBytes = fooChannel.getChannelConfigurationBytes();
+
 
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost("http://localhost:7059/protolator/decode/common.Config");

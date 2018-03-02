@@ -71,6 +71,150 @@ public class TestConfig {
     private final boolean runningFabricTLS;
     private static final HashMap<String, SampleOrg> sampleOrgs = new HashMap<>();
 
+
+    private TestConfig(boolean a) {
+        File loadFile;
+        FileInputStream configProps;
+
+        try {
+            loadFile = new File(System.getProperty(ORG_HYPERLEDGER_FABRIC_SDK_CONFIGURATION, DEFAULT_CONFIG))
+                    .getAbsoluteFile();
+            logger.debug(String.format("Loading configuration from %s and it is present: %b", loadFile.toString(),
+                    loadFile.exists()));
+            configProps = new FileInputStream(loadFile);
+            sdkProperties.load(configProps);
+
+        } catch (IOException e) { // if not there no worries just use defaults
+//            logger.warn(String.format("Failed to load any test configuration from: %s. Using toolkit defaults",
+//                    DEFAULT_CONFIG));
+        } finally {
+
+            // Default values
+
+            defaultProperty(GOSSIPWAITTIME, "5000");
+            defaultProperty(INVOKEWAITTIME, "100000");
+            defaultProperty(DEPLOYWAITTIME, "120000");
+            defaultProperty(PROPOSALWAITTIME, "120000");
+
+
+            ////// 测试已有fabric网络
+
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.mspid", "Org1MSP");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.domname", "org1.example.com");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.ca_location", "http://10.0.0.75:7054");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.peer_locations", "peer0.org1.example.com@grpc://10.0.0.75:7051, peer1.org1.example.com@grpc://10.0.0.75:8051");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.orderer_locations", "orderer.example.com@grpc://10.0.0.75:7050");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.eventhub_locations", "peer0.org1.example.com@grpc://10.0.0.75:7053,peer1.org1.example.com@grpc://10.0.0.75:7058");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.mspid", "Org2MSP");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.domname", "org2.example.com");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.ca_location", "http://10.0.0.75:8054");//如果两个组织向同一个CA机构认证就能加入同一个channel？
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.peer_locations", "peer0.org2.example.com@grpc://10.0.0.75:9051,peer1.org2.example.com@grpc://10.0.0.75:10051");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.orderer_locations", "orderer.example.com@grpc://10.0.0.75:7050");
+            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.eventhub_locations", "peer0.org2.example.com@grpc://10.0.0.75:8053, peer1.org2.example.com@grpc://10.0.0.75:8058");
+
+
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.mspid", "Org1MSP");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.domname", "org1.example.com");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.ca_location", "http://10.0.0.119:7054");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.peer_locations", "peer0.org1.example.com@grpc://10.0.0.119:7051, peer1.org1.example.com@grpc://10.0.0.119:7056");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.orderer_locations", "orderer.example.com@grpc://10.0.0.119:7050");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg1.eventhub_locations", "peer0.org1.example.com@grpc://10.0.0.119:7053,peer1.org1.example.com@grpc://10.0.0.119:7058");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.mspid", "Org2MSP");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.domname", "org2.example.com");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.ca_location", "http://10.0.0.119:8054");//如果两个组织向同一个CA机构认证就能加入同一个channel？
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.peer_locations", "peer0.org2.example.com@grpc://10.0.0.119:8051,peer1.org2.example.com@grpc://10.0.0.119:8056");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.orderer_locations", "orderer.example.com@grpc://10.0.0.119:7050");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.eventhub_locations", "peer0.org2.example.com@grpc://10.0.0.119:8053, peer1.org2.example.com@grpc://10.0.0.119:8058");
+//            //
+//            defaultProperty(INTEGRATIONTESTS_ORG + "ordererOrg.mspid","OrdererMSP");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "ordererOrg.domname", "orderer.example.com");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "ordererOrg.orderer_locations", "orderer.example.com@grpc://10.0.0.119:7050");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "ordererOrg.peer_locations", "orderer.example.com@grpc://10.0.0.119:7050");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "ordererOrg.ca_location", "http://10.0.0.119:7054");
+
+
+
+            defaultProperty(INTEGRATIONTESTSTLS, null);
+            runningTLS = null != sdkProperties.getProperty(INTEGRATIONTESTSTLS, null);
+            runningFabricCATLS = runningTLS;
+            runningFabricTLS = runningTLS;
+
+            for (Map.Entry<Object, Object> x : sdkProperties.entrySet()) {
+                final String key = x.getKey() + "";
+                final String val = x.getValue() + "";
+
+                if (key.startsWith(INTEGRATIONTESTS_ORG)) {
+
+                    Matcher match = orgPat.matcher(key);
+
+                    if (match.matches() && match.groupCount() == 1) {
+                        String orgName = match.group(1).trim();
+                        sampleOrgs.put(orgName, new SampleOrg(orgName, val.trim()));
+
+                    }
+                }
+            }
+
+            for (Map.Entry<String, SampleOrg> org : sampleOrgs.entrySet()) {
+                final SampleOrg sampleOrg = org.getValue();
+                final String orgName = org.getKey();
+
+                String peerNames = sdkProperties.getProperty(INTEGRATIONTESTS_ORG + orgName + ".peer_locations");
+                String[] ps = peerNames.split("[ \t]*,[ \t]*");
+                for (String peer : ps) {
+                    String[] nl = peer.split("[ \t]*@[ \t]*");
+                    sampleOrg.addPeerLocation(nl[0], grpcTLSify(nl[1]));
+                }
+
+                final String domainName = sdkProperties.getProperty(INTEGRATIONTESTS_ORG + orgName + ".domname");
+
+                sampleOrg.setDomainName(domainName);
+
+                String ordererNames = sdkProperties.getProperty(INTEGRATIONTESTS_ORG + orgName + ".orderer_locations");
+                ps = ordererNames.split("[ \t]*,[ \t]*");
+                for (String peer : ps) {
+                    String[] nl = peer.split("[ \t]*@[ \t]*");
+                    sampleOrg.addOrdererLocation(nl[0], grpcTLSify(nl[1]));
+                }
+
+                String eventHubNames = sdkProperties.getProperty(INTEGRATIONTESTS_ORG + orgName + ".eventhub_locations");
+                if(eventHubNames != null && !eventHubNames.equals("")){
+                    ps = eventHubNames.split("[ \t]*,[ \t]*");
+                    for (String peer : ps) {
+                        String[] nl = peer.split("[ \t]*@[ \t]*");
+                        sampleOrg.addEventHubLocation(nl[0], grpcTLSify(nl[1]));
+                    }
+                }
+
+                String caLCT = sdkProperties.getProperty((INTEGRATIONTESTS_ORG + org.getKey() + ".ca_location"));
+                if(caLCT != null && !caLCT.equals("")){
+
+                    sampleOrg.setCALocation(httpTLSify(caLCT));
+
+                }
+
+
+
+                if (runningFabricCATLS) {
+                    String cert = "test-docker/src/main/java/com/gmou/api/src/test/fixture/sdkintegration/e2e-2Orgs/channel/crypto-config/peerOrganizations/DNAME/ca/ca.DNAME-cert.pem".replaceAll("DNAME", domainName);
+                    File cf = new File(cert);
+                    if (!cf.exists() || !cf.isFile()) {
+                        throw new RuntimeException("TEST is missing cert file " + cf.getAbsolutePath());
+                    }
+                    Properties properties = new Properties();
+                    properties.setProperty("pemFile", cf.getAbsolutePath());
+
+                    properties.setProperty("allowAllHostNames", "true"); //testing environment only NOT FOR PRODUCTION!
+
+                    sampleOrg.setCAProperties(properties);
+                }
+            }
+
+        }
+
+
+    }
+
     private TestConfig() {
         File loadFile;
         FileInputStream configProps;
@@ -109,6 +253,12 @@ public class TestConfig {
             defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.peer_locations", "peer0.org2.example.com@grpc://10.0.0.119:8051,peer1.org2.example.com@grpc://10.0.0.119:8056");
             defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.orderer_locations", "orderer.example.com@grpc://10.0.0.119:7050");
             defaultProperty(INTEGRATIONTESTS_ORG + "peerOrg2.eventhub_locations", "peer0.org2.example.com@grpc://10.0.0.119:8053, peer1.org2.example.com@grpc://10.0.0.119:8058");
+            //
+//            defaultProperty(INTEGRATIONTESTS_ORG + "orderOrg.mspid","OrdererMSP");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "orderOrg.domname", "example.com");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "orderOrg.orderer_locations", "orderer.example.com@grpc://10.0.0.119:7050");
+//            defaultProperty(INTEGRATIONTESTS_ORG + "orderOrg.peer_locations", "orderer.example.com@grpc://10.0.0.119:7050");
+
 
             defaultProperty(INTEGRATIONTESTSTLS, null);
             runningTLS = null != sdkProperties.getProperty(INTEGRATIONTESTSTLS, null);
@@ -207,6 +357,14 @@ public class TestConfig {
     public static TestConfig getConfig() {
         if (null == config) {
             config = new TestConfig();
+        }
+        return config;
+
+    }
+
+    public static TestConfig getMultipleOrgsConfig() {
+        if (null == config) {
+            config = new TestConfig(true);
         }
         return config;
 

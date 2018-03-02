@@ -96,6 +96,7 @@ public class End2endAndBackAgainIT {
     public void checkConfig() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, MalformedURLException {
 
         out("\n\n\nRUNNING: End2endAndBackAgainIT\n");
+          final TestConfig testConfig = TestConfig.getConfig();
 
         configHelper.clearConfig();
         configHelper.customizeConfig();
@@ -179,6 +180,7 @@ public class End2endAndBackAgainIT {
             fail(e.getMessage());
         }
     }
+
 
     // Disable MethodLength as this method is for instructional purposes and hence
     // we don't want to split it into smaller pieces
@@ -490,6 +492,7 @@ public class End2endAndBackAgainIT {
 
         client.setUserContext(sampleOrg.getPeerAdmin());
         Channel newChannel = client.newChannel(name);
+
 
         for (String orderName : sampleOrg.getOrdererNames()) {
             newChannel.addOrderer(client.newOrderer(orderName, sampleOrg.getOrdererLocation(orderName),
