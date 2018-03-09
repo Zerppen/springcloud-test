@@ -24,3 +24,7 @@ https://wiki.hyperledger.org/groups/tsc/technical-working-group-china?&#voluntee
 
 中国贡献者
 https://wiki.hyperledger.org/groups/twgc/team_di?&#volunteers
+
+
+杨保华电子书
+https://github.com/yeasy/blockchain_guide/blob/master/SUMMARY.md
